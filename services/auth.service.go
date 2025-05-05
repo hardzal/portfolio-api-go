@@ -13,7 +13,7 @@ import (
 var ErrInvalidCredentials = errors.New("invalid email or password")
 
 type AuthService interface {
-	LoginUser(user models.User) (string, error)
+	LoginUser(user models.UserLoginDTO) (string, error)
 }
 
 type authService struct {
@@ -24,7 +24,7 @@ func NewAuthService(user repositories.UserRepository) AuthService {
 	return &authService{userAuth: user}
 }
 
-func (a *authService) LoginUser(user models.User) (string, error) {
+func (a *authService) LoginUser(user models.UserLoginDTO) (string, error) {
 	userLogin, err := a.userAuth.GetUserByEmail(user.Email)
 
 	if err != nil {

@@ -27,3 +27,8 @@ type UserLoginDTO struct {
 	Email    string `json:"email" validate:"email"`
 	Password string `json:"password" validate:"password"`
 }
+
+type AuthResponse struct {
+	Token     string     `json:"token"`
+	ExpiresAt *time.Time `json:"expires_at"`
+}
