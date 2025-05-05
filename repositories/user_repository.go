@@ -7,10 +7,12 @@ import (
 	"gorm.io/gorm"
 )
 
+var ErrUserNotFound = errors.New("user not found")
+
 // inteface for abstract
 type UserRepository interface {
-	getUserByEmail(email string) (*models.User, error)
-	getUserByUsername(username string) (*models.User, error)
+	GetUserByEmail(email string) (*models.User, error)
+	GetUserByUsername(username string) (*models.User, error)
 }
 
 // connect to db
@@ -23,11 +25,11 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 }
 
 // getUserByEmail implements UserRepository.
-func (u *userRepository) getUserByEmail(email string) (*models.User, error) {
+func (u *userRepository) GetUserByEmail(email string) (*models.User, error) {
 	var user models.User
 	if err := u.db.Where(&models.User{Email: email}).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
+			return nil, ErrUserNotFound
 		}
 		return nil, err
 	}
@@ -36,7 +38,7 @@ func (u *userRepository) getUserByEmail(email string) (*models.User, error) {
 }
 
 // getUserByUsername implements UserRepository.
-func (u *userRepository) getUserByUsername(username string) (*models.User, error) {
+func (u *userRepository) GetUserByUsername(username string) (*models.User, error) {
 	var user models.User
 	if err := u.db.Where(&models.User{Username: username}).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
