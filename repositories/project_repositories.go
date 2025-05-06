@@ -10,8 +10,8 @@ import (
 var ErrProjectNotFound error = errors.New("project not found")
 
 type ProjectRepository interface {
-	GetAllProjects() ([]models.Project, error)
 	GetProject(id string) (*models.Project, error)
+	GetAllProjects() ([]models.Project, error)
 	CreateProject(project *models.Project) (*models.Project, error)
 	UpdateProject(project *models.Project) (*models.Project, error)
 	DeleteProject(id string) error
