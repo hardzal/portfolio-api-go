@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var ErrUserNotFound = errors.New("user not found")
+var ErrUserNotFound error = errors.New("user not found")
 
 // inteface for abstract
 type UserRepository interface {
@@ -42,7 +42,7 @@ func (u *userRepository) GetUserByUsername(username string) (*models.User, error
 	var user models.User
 	if err := u.db.Where(&models.User{Username: username}).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
+			return nil, ErrUserNotFound
 		}
 		return nil, err
 	}
