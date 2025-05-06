@@ -21,7 +21,6 @@ func NewAboutService(repo repositories.AboutRepository) AboutService {
 
 // CreateAbout implements AboutService.
 func (a *aboutService) CreateAbout(about models.About) (*models.AboutResponse, error) {
-
 	newAbout, err := a.aboutRepo.CreateAbout(&about)
 	if err != nil {
 		return nil, err

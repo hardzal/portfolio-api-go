@@ -15,7 +15,22 @@ type Project struct {
 }
 
 type ProjectResponse struct {
+	ID          string     `json:"id"`
+	Title       string     `json:"title"`
+	Description string     `json:"description"`
+	ImageUrl    *string    `json:"image_url"`
+	Stacks      []string   `json:"stacks"`
+	Repo        *string    `json:"repo"`
+	Demo        *string    `json:"demo"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   *time.Time `json:"updated_at"`
 }
 
 type ProjectDTO struct {
+	Title       string   `json:"title" validate:"required"`
+	Description string   `json:"description" validate:"required"`
+	ImageUrl    *string  `json:"image_url" validate:"required"`
+	Stacks      []string `json:"stacks" validate:"required"`
+	Repo        *string  `json:"repo" validate:"required"`
+	Demo        *string  `json:"demo" validate:"required"`
 }

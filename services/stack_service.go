@@ -7,9 +7,9 @@ import (
 
 type StackService interface {
 	GetAllStack() ([]models.Stack, error)
-	GetStack(id string) (*models.Stack, error)
-	CreateStack(stack *models.Stack) (*models.Stack, error)
-	UpdateStack(stack *models.Stack) (*models.Stack, error)
+	GetStack(id string) (*models.StackResponse, error)
+	CreateStack(stack *models.Stack) (*models.StackResponse, error)
+	UpdateStack(stack *models.Stack) (*models.StackResponse, error)
 	DeleteStack(id string) error
 }
 
@@ -18,30 +18,64 @@ type stackService struct {
 }
 
 // CreateStack implements StackService.
-func (s *stackService) CreateStack(stack *models.Stack) (*models.Stack, error) {
-	panic("unimplemented")
+func (s *stackService) CreateStack(stack *models.Stack) (*models.StackResponse, error) {
+	newStack, err := s.stackRepo.CreateStack(stack)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.mapToResponse(newStack), err
 }
 
 // DeleteStack implements StackService.
 func (s *stackService) DeleteStack(id string) error {
-	panic("unimplemented")
+	if err := s.stackRepo.DeleteStack(id); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // GetAllStack implements StackService.
 func (s *stackService) GetAllStack() ([]models.Stack, error) {
-	panic("unimplemented")
+	stacks, err := s.stackRepo.GetAllStacks()
+	if err != nil {
+		return nil, err
+	}
+
+	return stacks, nil
 }
 
 // GetStack implements StackService.
-func (s *stackService) GetStack(id string) (*models.Stack, error) {
-	panic("unimplemented")
+func (s *stackService) GetStack(id string) (*models.StackResponse, error) {
+	stack, err := s.stackRepo.GetStack(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.mapToResponse(stack), err
 }
 
 // UpdateStack implements StackService.
-func (s *stackService) UpdateStack(stack *models.Stack) (*models.Stack, error) {
-	panic("unimplemented")
+func (s *stackService) UpdateStack(stack *models.Stack) (*models.StackResponse, error) {
+	stack, err := s.stackRepo.UpdateStack(stack)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.mapToResponse(stack), err
 }
 
 func NewStackService(repo repositories.StackRepository) StackService {
 	return &stackService{stackRepo: repo}
+}
+
+func (s *stackService) mapToResponse(stack *models.Stack) *models.StackResponse {
+	return &models.StackResponse{
+		ID:        stack.ID,
+		Name:      stack.Name,
+		Image:     stack.Image,
+		CreatedAt: stack.CreatedAt,
+		UpdatedAt: stack.UpdatedAt,
+	}
 }

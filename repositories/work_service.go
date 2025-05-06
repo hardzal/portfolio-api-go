@@ -13,7 +13,7 @@ type WorkRepository interface {
 	GetAllWorks() ([]models.Work, error)
 	GetWork(id string) (*models.Work, error)
 	CreateWork(work *models.Work) (*models.Work, error)
-	UpdateProject(work *models.Work) (*models.Work, error)
+	UpdateWork(work *models.Work) (*models.Work, error)
 	DeleteWork(id string) error
 }
 
@@ -67,8 +67,8 @@ func (w *workRepository) GetWork(id string) (*models.Work, error) {
 	return &work, nil
 }
 
-// UpdateProject implements WorkRepository.
-func (w *workRepository) UpdateProject(work *models.Work) (*models.Work, error) {
+// UpdateWork implements WorkRepository.
+func (w *workRepository) UpdateWork(work *models.Work) (*models.Work, error) {
 	if err := w.db.Save(work).Error; err != nil {
 		return nil, err
 	}

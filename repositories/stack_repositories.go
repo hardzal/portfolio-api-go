@@ -13,7 +13,7 @@ type StackRepository interface {
 	GetAllStacks() ([]models.Stack, error)
 	GetStack(id string) (*models.Stack, error)
 	CreateStack(stack *models.Stack) (*models.Stack, error)
-	UpdateProject(stack *models.Stack) (*models.Stack, error)
+	UpdateStack(stack *models.Stack) (*models.Stack, error)
 	DeleteStack(id string) error
 }
 
@@ -67,8 +67,8 @@ func (s *stackRepository) GetStack(id string) (*models.Stack, error) {
 	return &stack, nil
 }
 
-// UpdateProject implements StackRepository.
-func (s *stackRepository) UpdateProject(stack *models.Stack) (*models.Stack, error) {
+// UpdateStack implements StackRepository.
+func (s *stackRepository) UpdateStack(stack *models.Stack) (*models.Stack, error) {
 	if err := s.db.Save(stack).Error; err != nil {
 		return nil, err
 	}
