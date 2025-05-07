@@ -8,8 +8,8 @@ import (
 type StackService interface {
 	GetAllStack() ([]models.Stack, error)
 	GetStack(id string) (*models.StackResponse, error)
-	CreateStack(stack *models.Stack) (*models.StackResponse, error)
-	UpdateStack(stack *models.Stack) (*models.StackResponse, error)
+	CreateStack(stack *models.StackDTO, image *string) (*models.StackResponse, error)
+	UpdateStack(id string, stack *models.StackDTO, updatedImage string) (*models.StackResponse, error)
 	DeleteStack(id string) error
 }
 
@@ -18,8 +18,13 @@ type stackService struct {
 }
 
 // CreateStack implements StackService.
-func (s *stackService) CreateStack(stack *models.Stack) (*models.StackResponse, error) {
-	newStack, err := s.stackRepo.CreateStack(stack)
+func (s *stackService) CreateStack(stack *models.StackDTO, image *string) (*models.StackResponse, error) {
+	newStack := &models.Stack{
+		Name:  stack.Name,
+		Image: *image,
+	}
+
+	newStack, err := s.stackRepo.CreateStack(newStack)
 	if err != nil {
 		return nil, err
 	}
@@ -57,13 +62,24 @@ func (s *stackService) GetStack(id string) (*models.StackResponse, error) {
 }
 
 // UpdateStack implements StackService.
-func (s *stackService) UpdateStack(stack *models.Stack) (*models.StackResponse, error) {
-	stack, err := s.stackRepo.UpdateStack(stack)
+func (s *stackService) UpdateStack(id string, stack *models.StackDTO, updatedImage string) (*models.StackResponse, error) {
+	dataStack, err := s.stackRepo.GetStack(id)
 	if err != nil {
 		return nil, err
 	}
 
-	return s.mapToResponse(stack), err
+	newStack := &models.Stack{
+		ID:    dataStack.ID,
+		Name:  stack.Name,
+		Image: updatedImage,
+	}
+
+	updateddStack, err := s.stackRepo.UpdateStack(newStack)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.mapToResponse(updateddStack), err
 }
 
 func NewStackService(repo repositories.StackRepository) StackService {

@@ -38,7 +38,7 @@ func UploadToCloudinary(file *multipart.FileHeader, fileFolder string) (string, 
 
 	uploadParams := uploader.UploadParams{
 		PublicID: file.Filename,
-		Folder:   fileFolder,
+		Folder:   `portfolio/` + fileFolder,
 	}
 
 	result, err := cld.Upload.Upload(ctx, src, uploadParams)

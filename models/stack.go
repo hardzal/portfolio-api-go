@@ -19,6 +19,5 @@ type StackResponse struct {
 }
 
 type StackDTO struct {
-	Name  string `json:"name" validate:"require"`
-	Image string `json:"image" validate:"require"`
+	Name string `json:"name" validate:"require"`
 }

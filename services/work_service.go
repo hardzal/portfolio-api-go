@@ -8,8 +8,8 @@ import (
 type WorkService interface {
 	GetAllWork() ([]models.Work, error)
 	GetWork(id string) (*models.WorkResponse, error)
-	CreateWork(work *models.Work) (*models.WorkResponse, error)
-	UpdateWork(work *models.Work) (*models.WorkResponse, error)
+	CreateWork(work *models.WorkDTO, image *string) (*models.WorkResponse, error)
+	UpdateWork(id string, work *models.WorkDTO, image *string) (*models.WorkResponse, error)
 	DeleteWork(id string) error
 }
 
@@ -18,13 +18,23 @@ type workService struct {
 }
 
 // CreateWork implements WorkService.
-func (w *workService) CreateWork(work *models.Work) (*models.WorkResponse, error) {
-	newWork, err := w.workRepo.CreateWork(work)
+func (w *workService) CreateWork(work *models.WorkDTO, image *string) (*models.WorkResponse, error) {
+	newWork := &models.Work{
+		Role:        work.Role,
+		Company:     work.Company,
+		Description: work.Description,
+		Stacks:      work.Stacks,
+		Image:       *image,
+		StartDate:   work.StartDate,
+		EndDate:     work.EndDate,
+	}
+
+	newWorkCreate, err := w.workRepo.CreateWork(newWork)
 	if err != nil {
 		return nil, err
 	}
 
-	return w.mapToResponse(newWork), err
+	return w.mapToResponse(newWorkCreate), err
 }
 
 // DeleteWork implements WorkService.
@@ -57,8 +67,24 @@ func (w *workService) GetWork(id string) (*models.WorkResponse, error) {
 }
 
 // UpdateWork implements WorkService.
-func (w *workService) UpdateWork(work *models.Work) (*models.WorkResponse, error) {
-	updateWork, err := w.workRepo.UpdateWork(work)
+func (w *workService) UpdateWork(id string, work *models.WorkDTO, image *string) (*models.WorkResponse, error) {
+	dataWork, err := w.workRepo.GetWork(id)
+	if err != nil {
+		return nil, err
+	}
+
+	newWork := &models.Work{
+		ID:          dataWork.ID,
+		Role:        work.Role,
+		Company:     work.Company,
+		Description: work.Description,
+		Stacks:      work.Stacks,
+		Image:       *image,
+		StartDate:   work.StartDate,
+		EndDate:     work.EndDate,
+	}
+
+	updateWork, err := w.workRepo.UpdateWork(newWork)
 	if err != nil {
 		return nil, err
 	}
