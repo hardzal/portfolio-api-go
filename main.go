@@ -6,8 +6,11 @@ import (
 	fiber "github.com/gofiber/fiber/v2"
 	"github.com/hardzal/portfolio-api-go/config"
 	"github.com/hardzal/portfolio-api-go/database"
+	"github.com/hardzal/portfolio-api-go/handlers/about"
 	"github.com/hardzal/portfolio-api-go/handlers/auth"
 	"github.com/hardzal/portfolio-api-go/handlers/project"
+	"github.com/hardzal/portfolio-api-go/handlers/stack"
+	"github.com/hardzal/portfolio-api-go/handlers/work"
 	"github.com/hardzal/portfolio-api-go/repositories"
 	"github.com/hardzal/portfolio-api-go/routes"
 	"github.com/hardzal/portfolio-api-go/services"
@@ -47,10 +50,19 @@ func main() {
 	projectHandler := project.NewProjectHandler(projectService)
 
 	// work services
+	workRepo := repositories.NewWorkRepository(gormDB)
+	workService := services.NewWorkService(workRepo)
+	workHandler := work.NewWorkHandler(workService)
 
 	// stack services
+	stackRepo := repositories.NewStackRepository(gormDB)
+	stackService := services.NewStackService(stackRepo)
+	stackHandler := stack.NewStackHandler(stackService)
 
 	// about services
+	aboutRepo := repositories.NewAboutRepository(gormDB)
+	aboutService := services.NewAboutService(aboutRepo)
+	aboutHandler := about.NewAboutHandler(aboutService)
 
 	app := fiber.New()
 
@@ -64,6 +76,9 @@ func main() {
 
 	routes.AuthRoutes(apiRoute.Group("/auth"), authHandler)
 	routes.ProjectRoutes(apiRoute.Group("/projects"), projectHandler)
+	routes.WorkRoutes(apiRoute.Group("/works"), workHandler)
+	routes.StackRoutes(apiRoute.Group("/stacks"), stackHandler)
+	routes.AboutRoutes(apiRoute.Group("/about"), aboutHandler)
 
 	log.Println("🚀 Server running at http://localhost:3000")
 	log.Fatal(app.Listen(":3000"))
