@@ -14,12 +14,16 @@ type ProjectHandler interface {
 	UpdateProject(c *fiber.Ctx) error
 	DeleteProject(c *fiber.Ctx) error
 }
-type projectHandler struct {
+type ProjectHandlerImpl struct {
 	projectService services.ProjectService
 }
 
+func NewProjectHandler(service services.ProjectService) ProjectHandler {
+	return &ProjectHandlerImpl{projectService: service}
+}
+
 // CreateProject implements ProjectHandler.
-func (p *projectHandler) CreateProject(c *fiber.Ctx) error {
+func (p *ProjectHandlerImpl) CreateProject(c *fiber.Ctx) error {
 	var projectDTO models.ProjectDTO
 	if err := utils.ParseBodyAndValidate(c, &projectDTO); err != nil {
 		return err
@@ -53,7 +57,7 @@ func (p *projectHandler) CreateProject(c *fiber.Ctx) error {
 }
 
 // DeleteProject implements ProjectHandler.
-func (p *projectHandler) DeleteProject(c *fiber.Ctx) error {
+func (p *ProjectHandlerImpl) DeleteProject(c *fiber.Ctx) error {
 	id := c.Params("id")
 	if err := p.projectService.DeleteProject(id); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -67,7 +71,7 @@ func (p *projectHandler) DeleteProject(c *fiber.Ctx) error {
 }
 
 // GetAllProject implements ProjectHandler.
-func (p *projectHandler) GetAllProject(c *fiber.Ctx) error {
+func (p *ProjectHandlerImpl) GetAllProject(c *fiber.Ctx) error {
 	projects, err := p.projectService.GetAllProjects()
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -83,7 +87,7 @@ func (p *projectHandler) GetAllProject(c *fiber.Ctx) error {
 }
 
 // GetProject implements ProjectHandler.
-func (p *projectHandler) GetProject(c *fiber.Ctx) error {
+func (p *ProjectHandlerImpl) GetProject(c *fiber.Ctx) error {
 	id := c.Params("id")
 	project, err := p.projectService.GetProject(id)
 	if err != nil {
@@ -100,7 +104,7 @@ func (p *projectHandler) GetProject(c *fiber.Ctx) error {
 }
 
 // UpdateProject implements ProjectHandler.
-func (p *projectHandler) UpdateProject(c *fiber.Ctx) error {
+func (p *ProjectHandlerImpl) UpdateProject(c *fiber.Ctx) error {
 	id := c.Params("id")
 	var projectDTO models.ProjectDTO
 	if err := utils.ParseBodyAndValidate(c, &projectDTO); err != nil {
@@ -129,8 +133,4 @@ func (p *projectHandler) UpdateProject(c *fiber.Ctx) error {
 		"message": "success updated the project",
 		"data":    updatedProject,
 	})
-}
-
-func NewProjectHandler(service services.ProjectService) ProjectHandler {
-	return &projectHandler{projectService: service}
 }

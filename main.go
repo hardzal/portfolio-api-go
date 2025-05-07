@@ -7,6 +7,7 @@ import (
 	"github.com/hardzal/portfolio-api-go/config"
 	"github.com/hardzal/portfolio-api-go/database"
 	"github.com/hardzal/portfolio-api-go/handlers/auth"
+	"github.com/hardzal/portfolio-api-go/handlers/project"
 	"github.com/hardzal/portfolio-api-go/repositories"
 	"github.com/hardzal/portfolio-api-go/routes"
 	"github.com/hardzal/portfolio-api-go/services"
@@ -35,9 +36,21 @@ func main() {
 
 	database.MigrateDB(gormDB)
 
+	// login services
 	userRepo := repositories.NewUserRepository(gormDB)
 	authService := services.NewAuthService(userRepo)
 	authHandler := auth.NewAuthHandler(authService)
+
+	// project services
+	projectRepo := repositories.NewProjectRepository(gormDB)
+	projectService := services.NewProjectService(projectRepo)
+	projectHandler := project.NewProjectHandler(projectService)
+
+	// work services
+
+	// stack services
+
+	// about services
 
 	app := fiber.New()
 
@@ -50,6 +63,7 @@ func main() {
 	apiRoute := app.Group("/api")
 
 	routes.AuthRoutes(apiRoute.Group("/auth"), authHandler)
+	routes.ProjectRoutes(apiRoute.Group("/projects"), projectHandler)
 
 	log.Println("🚀 Server running at http://localhost:3000")
 	log.Fatal(app.Listen(":3000"))
