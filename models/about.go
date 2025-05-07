@@ -12,7 +12,7 @@ type About struct {
 	Location    string     `json:"location" form:"location" gorm:"type:varchar(100);not null"`
 	IsAvailable bool       `json:"is_available" form:"is_available" gorm:"default:true"`
 	ImageUrl    string     `json:"image" form:"image" gorm:"type:text;not null"`
-	Handphone   string     `json:"handphone" form:"handphone" gorm:"type:varchar(100)not null"`
+	Handphone   string     `json:"handphone" form:"handphone" gorm:"type:varchar(100);not null"`
 	Email       string     `json:"email" form:"email" gorm:"type:varchar(200);not null"`
 	Resume      *string    `json:"resume" form:"resume" gorm:"type:text"`
 	CreatedAt   time.Time  `json:"created_at" gorm:"autoCreateTime"`

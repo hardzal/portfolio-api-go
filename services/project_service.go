@@ -1,8 +1,11 @@
 package services
 
 import (
+	"log"
+
 	"github.com/hardzal/portfolio-api-go/models"
 	"github.com/hardzal/portfolio-api-go/repositories"
+	"github.com/lib/pq"
 )
 
 type ProjectService interface {
@@ -19,14 +22,17 @@ type projectService struct {
 
 // CreateProject implements ProjectService.
 func (p *projectService) CreateProject(project *models.ProjectDTO, newImage *string) (*models.ProjectResponse, error) {
+
 	newProject := &models.Project{
 		Title:       project.Title,
 		Description: project.Description,
-		Stacks:      project.Stacks,
+		Stacks:      pq.StringArray(project.Stacks),
 		ImageUrl:    newImage,
 		Repo:        project.Repo,
 		Demo:        project.Demo,
 	}
+
+	log.Println("new result", newProject)
 
 	newProjectCreate, err := p.projectRepo.CreateProject(newProject)
 	if err != nil {
@@ -76,7 +82,7 @@ func (p *projectService) UpdateProject(id uint, project *models.ProjectDTO, upda
 		ID:          dataProject.ID,
 		Title:       project.Title,
 		Description: project.Description,
-		Stacks:      project.Stacks,
+		Stacks:      pq.StringArray(project.Stacks),
 		ImageUrl:    updatedImage,
 		Repo:        project.Repo,
 		Demo:        project.Demo,

@@ -3,6 +3,7 @@ package utils
 import (
 	"context"
 	"errors"
+	"log"
 	"mime/multipart"
 	"path/filepath"
 	"strings"
@@ -37,15 +38,25 @@ func UploadToCloudinary(file *multipart.FileHeader, fileFolder string) (string, 
 	defer src.Close()
 
 	uploadParams := uploader.UploadParams{
-		PublicID: file.Filename,
-		Folder:   `portfolio/` + fileFolder,
+		PublicID:     strings.TrimSuffix(file.Filename, ext),
+		Folder:       "portfolio/" + fileFolder,
+		ResourceType: "image",
 	}
 
 	result, err := cld.Upload.Upload(ctx, src, uploadParams)
 	if err != nil {
+		log.Printf("Cloudinary error: %v", err)
 		return "", err
+	} else {
+		log.Printf("Cloudinary response: %+v", result) // <-- Ini yang penting
+	}
+
+	// Cek URL
+	if result != nil && result.SecureURL == "" {
+		log.Println("WARNING: Upload success but no URL generated")
 	}
 
 	imageUrl := result.SecureURL
+
 	return imageUrl, nil
 }

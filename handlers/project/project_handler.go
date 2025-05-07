@@ -47,6 +47,21 @@ func (p *ProjectHandlerImpl) CreateProject(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
+	if url == "" {
+		return fiber.NewError(fiber.StatusInternalServerError, "image url tidak ditemukan.")
+	}
+	stacksParams := &models.WorkDTO{}
+	if err := c.BodyParser(stacksParams); err != nil {
+		return err
+	}
+
+	form, err := c.MultipartForm()
+	if err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "Invalid form data")
+	}
+
+	projectDTO.Stacks = form.Value["stacks"]
+
 	newProject, err := p.projectService.CreateProject(&projectDTO, &url)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
