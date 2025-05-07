@@ -29,7 +29,6 @@ type ProjectResponse struct {
 type ProjectDTO struct {
 	Title       string   `json:"title" validate:"required"`
 	Description string   `json:"description" validate:"required"`
-	ImageUrl    *string  `json:"image_url" validate:"required"`
 	Stacks      []string `json:"stacks" validate:"required"`
 	Repo        *string  `json:"repo" validate:"required"`
 	Demo        *string  `json:"demo" validate:"required"`

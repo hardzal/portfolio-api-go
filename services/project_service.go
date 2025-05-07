@@ -8,8 +8,8 @@ import (
 type ProjectService interface {
 	GetAllProjects() ([]models.Project, error)
 	GetProject(id string) (*models.ProjectResponse, error)
-	CreateProject(project *models.Project) (*models.ProjectResponse, error)
-	UpdateProject(project *models.Project) (*models.ProjectResponse, error)
+	CreateProject(project *models.ProjectDTO, image *string) (*models.ProjectResponse, error)
+	UpdateProject(id string, project *models.ProjectDTO, image *string) (*models.ProjectResponse, error)
 	DeleteProject(id string) error
 }
 
@@ -18,8 +18,17 @@ type projectService struct {
 }
 
 // CreateProject implements ProjectService.
-func (p *projectService) CreateProject(project *models.Project) (*models.ProjectResponse, error) {
-	newProject, err := p.projectRepo.CreateProject(project)
+func (p *projectService) CreateProject(project *models.ProjectDTO, newImage *string) (*models.ProjectResponse, error) {
+	newProject := &models.Project{
+		Title:       project.Title,
+		Description: project.Description,
+		Stacks:      project.Stacks,
+		ImageUrl:    newImage,
+		Repo:        project.Repo,
+		Demo:        project.Demo,
+	}
+
+	newProject, err := p.projectRepo.CreateProject(newProject)
 	if err != nil {
 		return nil, err
 	}
@@ -57,13 +66,28 @@ func (p *projectService) GetProject(id string) (*models.ProjectResponse, error) 
 }
 
 // UpdateProject implements ProjectService.
-func (p *projectService) UpdateProject(project *models.Project) (*models.ProjectResponse, error) {
-	project, err := p.projectRepo.UpdateProject(project)
+func (p *projectService) UpdateProject(id string, project *models.ProjectDTO, updatedImage *string) (*models.ProjectResponse, error) {
+	dataProject, err := p.projectRepo.GetProject(id)
 	if err != nil {
 		return nil, err
 	}
 
-	return p.mapToResponse(project), err
+	newProject := &models.Project{
+		ID:          dataProject.ID,
+		Title:       project.Title,
+		Description: project.Description,
+		Stacks:      project.Stacks,
+		ImageUrl:    updatedImage,
+		Repo:        project.Repo,
+		Demo:        project.Demo,
+	}
+
+	resProject, err := p.projectRepo.UpdateProject(newProject)
+	if err != nil {
+		return nil, err
+	}
+
+	return p.mapToResponse(resProject), err
 }
 
 func NewProjectService(repo repositories.ProjectRepository) ProjectService {
