@@ -86,7 +86,7 @@ func (p *ProjectHandlerImpl) DeleteProject(c *fiber.Ctx) error {
 	}
 	return c.Status(fiber.StatusNoContent).JSON(fiber.Map{
 		"status":  fiber.StatusNoContent,
-		"message": "Success delete the project",
+		"message": "Success delete the project", // didnt show
 	})
 }
 
@@ -141,6 +141,15 @@ func (p *ProjectHandlerImpl) UpdateProject(c *fiber.Ctx) error {
 			return fiber.NewError(fiber.StatusInternalServerError, "upload failed")
 		}
 		imageURL = uploadedURL
+	}
+
+	form, err := c.MultipartForm()
+	if err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "Invalid form data")
+	}
+
+	if form.Value["stacks"] != nil {
+		projectDTO.Stacks = form.Value["stacks"]
 	}
 
 	updatedProject, err := p.projectService.UpdateProject(uint(id), &projectDTO, &imageURL)

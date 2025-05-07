@@ -78,17 +78,31 @@ func (p *projectService) UpdateProject(id uint, project *models.ProjectDTO, upda
 		return nil, err
 	}
 
-	newProject := &models.Project{
-		ID:          dataProject.ID,
-		Title:       project.Title,
-		Description: project.Description,
-		Stacks:      pq.StringArray(project.Stacks),
-		ImageUrl:    updatedImage,
-		Repo:        project.Repo,
-		Demo:        project.Demo,
+	if project.Title != "" {
+		dataProject.Title = project.Title
 	}
 
-	resProject, err := p.projectRepo.UpdateProject(newProject)
+	if project.Description != "" {
+		dataProject.Description = project.Description
+	}
+
+	if project.Demo != nil {
+		dataProject.Demo = project.Demo
+	}
+
+	if project.Repo != nil {
+		dataProject.Repo = project.Repo
+	}
+
+	if len(project.Stacks) != 0 || project.Stacks != nil {
+		dataProject.Description = project.Description
+	}
+
+	if updatedImage != nil {
+		dataProject.ImageUrl = updatedImage
+	}
+
+	resProject, err := p.projectRepo.UpdateProject(dataProject)
 	if err != nil {
 		return nil, err
 	}
