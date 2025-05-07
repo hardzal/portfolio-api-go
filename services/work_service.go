@@ -7,10 +7,10 @@ import (
 
 type WorkService interface {
 	GetAllWork() ([]models.Work, error)
-	GetWork(id string) (*models.WorkResponse, error)
+	GetWork(id uint) (*models.WorkResponse, error)
 	CreateWork(work *models.WorkDTO, image *string) (*models.WorkResponse, error)
-	UpdateWork(id string, work *models.WorkDTO, image *string) (*models.WorkResponse, error)
-	DeleteWork(id string) error
+	UpdateWork(id uint, work *models.WorkDTO, image *string) (*models.WorkResponse, error)
+	DeleteWork(id uint) error
 }
 
 type workService struct {
@@ -38,7 +38,7 @@ func (w *workService) CreateWork(work *models.WorkDTO, image *string) (*models.W
 }
 
 // DeleteWork implements WorkService.
-func (w *workService) DeleteWork(id string) error {
+func (w *workService) DeleteWork(id uint) error {
 	if err := w.workRepo.DeleteWork(id); err != nil {
 		return err
 	}
@@ -57,7 +57,7 @@ func (w *workService) GetAllWork() ([]models.Work, error) {
 }
 
 // GetWork implements WorkService.
-func (w *workService) GetWork(id string) (*models.WorkResponse, error) {
+func (w *workService) GetWork(id uint) (*models.WorkResponse, error) {
 	work, err := w.workRepo.GetWork(id)
 	if err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func (w *workService) GetWork(id string) (*models.WorkResponse, error) {
 }
 
 // UpdateWork implements WorkService.
-func (w *workService) UpdateWork(id string, work *models.WorkDTO, image *string) (*models.WorkResponse, error) {
+func (w *workService) UpdateWork(id uint, work *models.WorkDTO, image *string) (*models.WorkResponse, error) {
 	dataWork, err := w.workRepo.GetWork(id)
 	if err != nil {
 		return nil, err

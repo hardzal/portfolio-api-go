@@ -1,6 +1,8 @@
 package project
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/hardzal/portfolio-api-go/models"
 	"github.com/hardzal/portfolio-api-go/services"
@@ -61,8 +63,8 @@ func (p *ProjectHandlerImpl) CreateProject(c *fiber.Ctx) error {
 
 // DeleteProject implements ProjectHandler.
 func (p *ProjectHandlerImpl) DeleteProject(c *fiber.Ctx) error {
-	id := c.Params("id")
-	if err := p.projectService.DeleteProject(id); err != nil {
+	id, _ := strconv.Atoi(c.Params("id"))
+	if err := p.projectService.DeleteProject(uint(id)); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),
 		})
@@ -91,8 +93,8 @@ func (p *ProjectHandlerImpl) GetAllProject(c *fiber.Ctx) error {
 
 // GetProject implements ProjectHandler.
 func (p *ProjectHandlerImpl) GetProject(c *fiber.Ctx) error {
-	id := c.Params("id")
-	project, err := p.projectService.GetProject(id)
+	id, _ := strconv.Atoi(c.Params("id"))
+	project, err := p.projectService.GetProject(uint(id))
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"error": "project not found",
@@ -108,7 +110,7 @@ func (p *ProjectHandlerImpl) GetProject(c *fiber.Ctx) error {
 
 // UpdateProject implements ProjectHandler.
 func (p *ProjectHandlerImpl) UpdateProject(c *fiber.Ctx) error {
-	id := c.Params("id")
+	id, _ := strconv.Atoi(c.Params("id"))
 	var projectDTO models.ProjectDTO
 	if err := utils.ParseBodyAndValidate(c, &projectDTO); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -126,7 +128,7 @@ func (p *ProjectHandlerImpl) UpdateProject(c *fiber.Ctx) error {
 		imageURL = uploadedURL
 	}
 
-	updatedProject, err := p.projectService.UpdateProject(id, &projectDTO, &imageURL)
+	updatedProject, err := p.projectService.UpdateProject(uint(id), &projectDTO, &imageURL)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}

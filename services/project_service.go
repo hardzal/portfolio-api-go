@@ -7,10 +7,10 @@ import (
 
 type ProjectService interface {
 	GetAllProjects() ([]models.Project, error)
-	GetProject(id string) (*models.ProjectResponse, error)
+	GetProject(id uint) (*models.ProjectResponse, error)
 	CreateProject(project *models.ProjectDTO, image *string) (*models.ProjectResponse, error)
-	UpdateProject(id string, project *models.ProjectDTO, image *string) (*models.ProjectResponse, error)
-	DeleteProject(id string) error
+	UpdateProject(id uint, project *models.ProjectDTO, image *string) (*models.ProjectResponse, error)
+	DeleteProject(id uint) error
 }
 
 type projectService struct {
@@ -37,7 +37,7 @@ func (p *projectService) CreateProject(project *models.ProjectDTO, newImage *str
 }
 
 // DeleteProject implements ProjectService.
-func (p *projectService) DeleteProject(id string) error {
+func (p *projectService) DeleteProject(id uint) error {
 	if err := p.projectRepo.DeleteProject(id); err != nil {
 		return err
 	}
@@ -56,7 +56,7 @@ func (p *projectService) GetAllProjects() ([]models.Project, error) {
 }
 
 // GetProject implements ProjectService.
-func (p *projectService) GetProject(id string) (*models.ProjectResponse, error) {
+func (p *projectService) GetProject(id uint) (*models.ProjectResponse, error) {
 	project, err := p.projectRepo.GetProject(id)
 	if err != nil {
 		return nil, err
@@ -66,7 +66,7 @@ func (p *projectService) GetProject(id string) (*models.ProjectResponse, error) 
 }
 
 // UpdateProject implements ProjectService.
-func (p *projectService) UpdateProject(id string, project *models.ProjectDTO, updatedImage *string) (*models.ProjectResponse, error) {
+func (p *projectService) UpdateProject(id uint, project *models.ProjectDTO, updatedImage *string) (*models.ProjectResponse, error) {
 	dataProject, err := p.projectRepo.GetProject(id)
 	if err != nil {
 		return nil, err

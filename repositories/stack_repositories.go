@@ -11,10 +11,10 @@ var ErrStackNotFound error = errors.New("stack not found")
 
 type StackRepository interface {
 	GetAllStacks() ([]models.Stack, error)
-	GetStack(id string) (*models.Stack, error)
+	GetStack(id uint) (*models.Stack, error)
 	CreateStack(stack *models.Stack) (*models.Stack, error)
 	UpdateStack(stack *models.Stack) (*models.Stack, error)
-	DeleteStack(id string) error
+	DeleteStack(id uint) error
 }
 
 type stackRepository struct {
@@ -35,7 +35,7 @@ func (s *stackRepository) CreateStack(stack *models.Stack) (*models.Stack, error
 }
 
 // DeleteStack implements StackRepository.
-func (s *stackRepository) DeleteStack(id string) error {
+func (s *stackRepository) DeleteStack(id uint) error {
 	if err := s.db.Delete(&models.Stack{}, id).Error; err != nil {
 		return err
 	}
@@ -54,7 +54,7 @@ func (s *stackRepository) GetAllStacks() ([]models.Stack, error) {
 }
 
 // GetStack implements StackRepository.
-func (s *stackRepository) GetStack(id string) (*models.Stack, error) {
+func (s *stackRepository) GetStack(id uint) (*models.Stack, error) {
 	var stack models.Stack
 	if err := s.db.First(&stack, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

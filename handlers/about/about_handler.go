@@ -1,6 +1,8 @@
 package about
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/hardzal/portfolio-api-go/models"
 	"github.com/hardzal/portfolio-api-go/services"
@@ -58,8 +60,8 @@ func (a *AboutHandlerImpl) CreateAbout(c *fiber.Ctx) error {
 
 // GetAbout implements AboutHandler.
 func (a *AboutHandlerImpl) GetAbout(c *fiber.Ctx) error {
-	id := c.Params("id")
-	about, err := a.AboutService.GetAbout(id)
+	id, _ := strconv.Atoi(c.Params("id"))
+	about, err := a.AboutService.GetAbout(uint(id))
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"error": "about not found",
@@ -75,7 +77,7 @@ func (a *AboutHandlerImpl) GetAbout(c *fiber.Ctx) error {
 
 // UpdateAbout implements AboutHandler.
 func (a *AboutHandlerImpl) UpdateAbout(c *fiber.Ctx) error {
-	id := c.Params("id")
+	id, _ := strconv.Atoi(c.Params("id"))
 	var aboutDTO models.AboutDTO
 	if err := utils.ParseBodyAndValidate(c, &aboutDTO); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -93,7 +95,7 @@ func (a *AboutHandlerImpl) UpdateAbout(c *fiber.Ctx) error {
 		imageURL = uploadedURL
 	}
 
-	updatedAbout, err := a.AboutService.UpdateAbout(id, &aboutDTO, &imageURL)
+	updatedAbout, err := a.AboutService.UpdateAbout(uint(id), &aboutDTO, &imageURL)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}

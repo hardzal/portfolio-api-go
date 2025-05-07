@@ -11,10 +11,10 @@ var ErrProjectNotFound error = errors.New("project not found")
 
 type ProjectRepository interface {
 	GetAllProjects() ([]models.Project, error)
-	GetProject(id string) (*models.Project, error)
+	GetProject(id uint) (*models.Project, error)
 	CreateProject(project *models.Project) (*models.Project, error)
 	UpdateProject(project *models.Project) (*models.Project, error)
-	DeleteProject(id string) error
+	DeleteProject(id uint) error
 }
 
 type projectRepository struct {
@@ -35,7 +35,7 @@ func (p *projectRepository) CreateProject(project *models.Project) (*models.Proj
 }
 
 // DeleteProject implements ProjectRepository.
-func (p *projectRepository) DeleteProject(id string) error {
+func (p *projectRepository) DeleteProject(id uint) error {
 	if err := p.db.Delete(&models.Project{}, id).Error; err != nil {
 		return err
 	}
@@ -44,7 +44,7 @@ func (p *projectRepository) DeleteProject(id string) error {
 }
 
 // GetProject implements ProjectRepository.
-func (p *projectRepository) GetProject(id string) (*models.Project, error) {
+func (p *projectRepository) GetProject(id uint) (*models.Project, error) {
 	var project models.Project
 	if err := p.db.First(&project, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

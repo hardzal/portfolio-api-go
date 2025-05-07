@@ -3,15 +3,15 @@ package models
 import "time"
 
 type Stack struct {
-	ID        string     `json:"id" gorm:"primaryKey;not null"`
-	Name      string     `json:"name" gorm:"not null"`
-	Image     string     `json:"image" gorm:"not null"`
+	ID        uint       `json:"id" gorm:"primaryKey;autoIncrement;not null"`
+	Name      string     `json:"name" gorm:"type:varchar(100);not null"`
+	Image     string     `json:"image" gorm:"type:text;not null"`
 	CreatedAt time.Time  `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt *time.Time `json:"updated_at" gorm:"autoUpdateTime"`
 }
 
 type StackResponse struct {
-	ID        string     `json:"id"`
+	ID        uint       `json:"id"`
 	Name      string     `json:"name"`
 	Image     string     `json:"image"`
 	CreatedAt time.Time  `json:"created_at"`

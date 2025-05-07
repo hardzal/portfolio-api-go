@@ -6,9 +6,9 @@ import (
 )
 
 type AboutService interface {
-	GetAbout(id string) (*models.AboutResponse, error)
+	GetAbout(id uint) (*models.AboutResponse, error)
 	CreateAbout(about *models.AboutDTO, image *string) (*models.AboutResponse, error)
-	UpdateAbout(id string, about *models.AboutDTO, image *string) (*models.AboutResponse, error)
+	UpdateAbout(id uint, about *models.AboutDTO, image *string) (*models.AboutResponse, error)
 }
 
 type aboutService struct {
@@ -40,7 +40,7 @@ func (a *aboutService) CreateAbout(about *models.AboutDTO, image *string) (*mode
 }
 
 // GetAbout implements AboutService.
-func (a *aboutService) GetAbout(id string) (*models.AboutResponse, error) {
+func (a *aboutService) GetAbout(id uint) (*models.AboutResponse, error) {
 	about, err := a.aboutRepo.GetAbout(id)
 	if err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func (a *aboutService) GetAbout(id string) (*models.AboutResponse, error) {
 }
 
 // UpdateAbout implements AboutService.
-func (a *aboutService) UpdateAbout(id string, about *models.AboutDTO, image *string) (*models.AboutResponse, error) {
+func (a *aboutService) UpdateAbout(id uint, about *models.AboutDTO, image *string) (*models.AboutResponse, error) {
 	dataAbout, err := a.aboutRepo.GetAbout(id)
 	if err != nil {
 		return nil, err

@@ -10,7 +10,7 @@ import (
 var ErrAboutNotFound error = errors.New("about not fund")
 
 type AboutRepository interface {
-	GetAbout(id string) (*models.About, error)
+	GetAbout(id uint) (*models.About, error)
 	CreateAbout(about *models.About) (*models.About, error)
 	UpdateAbout(about *models.About) (*models.About, error)
 }
@@ -33,7 +33,7 @@ func (a *aboutRepository) CreateAbout(about *models.About) (*models.About, error
 }
 
 // GetAbout implements AboutRepository.
-func (a *aboutRepository) GetAbout(id string) (*models.About, error) {
+func (a *aboutRepository) GetAbout(id uint) (*models.About, error) {
 	var about models.About
 	if err := a.db.First(&about, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

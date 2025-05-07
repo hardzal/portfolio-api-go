@@ -3,20 +3,20 @@ package models
 import "time"
 
 type Work struct {
-	ID          string     `json:"id" gorm:"primaryKey;not null"`
-	Role        string     `json:"role" gorm:"not null"`
-	Company     string     `json:"company" gorm:"not null"`
-	Description string     `json:"description" gorm:"not null"`
-	Stacks      []string   `json:"stack" gorm:"not null;type:text[]"`
-	Image       string     `json:"image" gorm:"not null"`
-	StartDate   *string    `json:"start_date" form:"start_date"`
-	EndDate     *string    `json:"end_date" form:"end_date"`
+	ID          uint       `json:"id" gorm:"primaryKey;autoIncrement;not null"`
+	Role        string     `json:"role" gorm:"type:varchar(100);not null"`
+	Company     string     `json:"company" gorm:"type:varchar(100);not null"`
+	Description string     `json:"description" gorm:"type:text;not null"`
+	Stacks      []string   `json:"stack" gorm:"type:text[];not null"`
+	Image       string     `json:"image" gorm:"type:text;not null"`
+	StartDate   *string    `json:"start_date" form:"start_date" gorm:"type:text"`
+	EndDate     *string    `json:"end_date" form:"end_date" gorm:"type:text"`
 	CreatedAt   time.Time  `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt   *time.Time `json:"updated_at" gorm:"autoUpdateTime"`
 }
 
 type WorkResponse struct {
-	ID          string     `json:"id"`
+	ID          uint       `json:"id"`
 	Role        string     `json:"role"`
 	Company     string     `json:"company"`
 	Description string     `json:"description"`

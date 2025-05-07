@@ -5,22 +5,22 @@ import (
 )
 
 type About struct {
-	ID          string     `json:"id" gorm:"type:string;primaryKey;default:uuid_generate_v4()"`
-	Title       string     `json:"title" form:"title" gorm:"not null"`
-	Profession  string     `json:"profession" form:"profession" gorm:"not null"`
-	Description string     `json:"description" form:"description"  gorm:"not null"`
-	Location    string     `json:"location" form:"location" gorm:"not null"`
+	ID          uint       `json:"id" gorm:"primaryKey;autoIncrement"`
+	Title       string     `json:"title" form:"title" gorm:"type:varchar(100);not null"`
+	Profession  string     `json:"profession" form:"profession" gorm:"type:varchar(100);not null"`
+	Description string     `json:"description" form:"description"  gorm:"type:text;not null"`
+	Location    string     `json:"location" form:"location" gorm:"type:varchar(100);not null"`
 	IsAvailable bool       `json:"is_available" form:"is_available" gorm:"default:true"`
-	ImageUrl    string     `json:"image" form:"image" gorm:"not null"`
-	Handphone   string     `json:"handphone" form:"handphone" gorm:"not null"`
-	Email       string     `json:"email" form:"email" validate:"required,email" gorm:"not null"`
-	Resume      *string    `json:"resume" form:"resume"`
+	ImageUrl    string     `json:"image" form:"image" gorm:"type:text;not null"`
+	Handphone   string     `json:"handphone" form:"handphone" gorm:"type:varchar(100)not null"`
+	Email       string     `json:"email" form:"email" gorm:"type:varchar(200);not null"`
+	Resume      *string    `json:"resume" form:"resume" gorm:"type:text"`
 	CreatedAt   time.Time  `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt   *time.Time `json:"updated_at" gorm:"autoUpdateTime"`
 }
 
 type AboutResponse struct {
-	ID          string     `json:"id"`
+	ID          uint       `json:"id"`
 	Title       string     `json:"title"`
 	Profession  string     `json:"profession"`
 	Description string     `json:"description"`

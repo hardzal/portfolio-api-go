@@ -1,6 +1,8 @@
 package work
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/hardzal/portfolio-api-go/models"
 	"github.com/hardzal/portfolio-api-go/services"
@@ -58,8 +60,8 @@ func (w *WorkHandlerImpl) CreateWork(c *fiber.Ctx) error {
 
 // DeleteWork implements WorkHandler.
 func (w *WorkHandlerImpl) DeleteWork(c *fiber.Ctx) error {
-	id := c.Params("id")
-	if err := w.workService.DeleteWork(id); err != nil {
+	id, _ := strconv.Atoi(c.Params("id"))
+	if err := w.workService.DeleteWork(uint(id)); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),
 		})
@@ -88,8 +90,8 @@ func (w *WorkHandlerImpl) GetAllWork(c *fiber.Ctx) error {
 
 // GetWork implements WorkHandler.
 func (w *WorkHandlerImpl) GetWork(c *fiber.Ctx) error {
-	id := c.Params("id")
-	work, err := w.workService.GetWork(id)
+	id, _ := strconv.Atoi(c.Params("id"))
+	work, err := w.workService.GetWork(uint(id))
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"error": "work not found",
@@ -105,7 +107,7 @@ func (w *WorkHandlerImpl) GetWork(c *fiber.Ctx) error {
 
 // UpdateWork implements WorkHandler.
 func (w *WorkHandlerImpl) UpdateWork(c *fiber.Ctx) error {
-	id := c.Params("id")
+	id, _ := strconv.Atoi(c.Params("id"))
 	var workDTO models.WorkDTO
 	if err := utils.ParseBodyAndValidate(c, &workDTO); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -123,7 +125,7 @@ func (w *WorkHandlerImpl) UpdateWork(c *fiber.Ctx) error {
 		imageURL = uploadedURL
 	}
 
-	updatedWork, err := w.workService.UpdateWork(id, &workDTO, &imageURL)
+	updatedWork, err := w.workService.UpdateWork(uint(id), &workDTO, &imageURL)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}

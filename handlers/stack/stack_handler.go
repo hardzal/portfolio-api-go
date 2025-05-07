@@ -1,6 +1,8 @@
 package stack
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/hardzal/portfolio-api-go/models"
 	"github.com/hardzal/portfolio-api-go/services"
@@ -58,8 +60,8 @@ func (s *StackHandlerImpl) CreateStack(c *fiber.Ctx) error {
 
 // DeleteStack implements StackHandler.
 func (s *StackHandlerImpl) DeleteStack(c *fiber.Ctx) error {
-	id := c.Params("id")
-	if err := s.stackService.DeleteStack(id); err != nil {
+	id, _ := strconv.Atoi(c.Params("id"))
+	if err := s.stackService.DeleteStack(uint(id)); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),
 		})
@@ -88,8 +90,8 @@ func (s *StackHandlerImpl) GetAllStack(c *fiber.Ctx) error {
 
 // GetStack implements StackHandler.
 func (s *StackHandlerImpl) GetStack(c *fiber.Ctx) error {
-	id := c.Params("id")
-	stack, err := s.stackService.GetStack(id)
+	id, _ := strconv.Atoi(c.Params("id"))
+	stack, err := s.stackService.GetStack(uint(id))
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"error": "stack not found",
@@ -105,7 +107,7 @@ func (s *StackHandlerImpl) GetStack(c *fiber.Ctx) error {
 
 // UpdateStack implements StackHandler.
 func (s *StackHandlerImpl) UpdateStack(c *fiber.Ctx) error {
-	id := c.Params("id")
+	id, _ := strconv.Atoi(c.Params("id"))
 	var stackDTO models.StackDTO
 	if err := utils.ParseBodyAndValidate(c, &stackDTO); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -123,7 +125,7 @@ func (s *StackHandlerImpl) UpdateStack(c *fiber.Ctx) error {
 		imageURL = uploadedURL
 	}
 
-	updatedProject, err := s.stackService.UpdateStack(id, &stackDTO, imageURL)
+	updatedProject, err := s.stackService.UpdateStack(uint(id), &stackDTO, imageURL)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}

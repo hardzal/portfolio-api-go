@@ -11,10 +11,10 @@ var ErrWorkNotFound error = errors.New("work not found")
 
 type WorkRepository interface {
 	GetAllWorks() ([]models.Work, error)
-	GetWork(id string) (*models.Work, error)
+	GetWork(id uint) (*models.Work, error)
 	CreateWork(work *models.Work) (*models.Work, error)
 	UpdateWork(work *models.Work) (*models.Work, error)
-	DeleteWork(id string) error
+	DeleteWork(id uint) error
 }
 
 type workRepository struct {
@@ -35,7 +35,7 @@ func (w *workRepository) CreateWork(work *models.Work) (*models.Work, error) {
 }
 
 // DeleteWork implements WorkRepository.
-func (w *workRepository) DeleteWork(id string) error {
+func (w *workRepository) DeleteWork(id uint) error {
 	if err := w.db.Delete(&models.Work{}, id).Error; err != nil {
 		return err
 	}
@@ -54,7 +54,7 @@ func (w *workRepository) GetAllWorks() ([]models.Work, error) {
 }
 
 // GetWork implements WorkRepository.
-func (w *workRepository) GetWork(id string) (*models.Work, error) {
+func (w *workRepository) GetWork(id uint) (*models.Work, error) {
 	var work models.Work
 	if err := w.db.First(&work, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
