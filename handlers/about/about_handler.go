@@ -2,7 +2,9 @@ package about
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/hardzal/portfolio-api-go/models"
 	"github.com/hardzal/portfolio-api-go/services"
+	"github.com/hardzal/portfolio-api-go/utils"
 )
 
 type AboutHandler interface {
@@ -19,7 +21,34 @@ type AboutHandlerImpl struct {
 
 // CreateAbout implements AboutHandler.
 func (a *AboutHandlerImpl) CreateAbout(c *fiber.Ctx) error {
-	panic("unimplemented")
+	var aboutDTO models.AboutDTO
+	if err := utils.ParseBodyAndValidate(c, &aboutDTO); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Message,
+			"error":   err.Error(),
+		})
+	}
+
+	file, err := c.FormFile("image")
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Image file required",
+			"error":   err.Error(),
+		})
+	}
+
+	url, err := utils.UploadToCloudinary(file, "about")
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+
+	newAbout, err := a.AboutService.CreateAbout(&aboutDTO, &url)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "failed to create project",
+		})
+	}
+
 }
 
 // DeleteAbout implements AboutHandler.

@@ -7,8 +7,8 @@ import (
 
 type AboutService interface {
 	GetAbout(id string) (*models.AboutResponse, error)
-	CreateAbout(about models.About) (*models.AboutResponse, error)
-	UpdateAbout(about *models.About) (*models.AboutResponse, error)
+	CreateAbout(about *models.AboutDTO, image *string) (*models.AboutResponse, error)
+	UpdateAbout(id string, about *models.AboutDTO, image *string) (*models.AboutResponse, error)
 }
 
 type aboutService struct {
@@ -20,13 +20,23 @@ func NewAboutService(repo repositories.AboutRepository) AboutService {
 }
 
 // CreateAbout implements AboutService.
-func (a *aboutService) CreateAbout(about models.About) (*models.AboutResponse, error) {
-	newAbout, err := a.aboutRepo.CreateAbout(&about)
+func (a *aboutService) CreateAbout(about *models.AboutDTO, image *string) (*models.AboutResponse, error) {
+	newAbout := &models.About{
+		Title:       about.Title,
+		Profession:  about.Profession,
+		Description: about.Description,
+		Location:    about.Location,
+		IsAvailable: about.IsAvailable,
+		Handphone:   about.Handphone,
+		Email:       about.Email,
+		Resume:      &about.Resume,
+	}
+	createdAbout, err := a.aboutRepo.CreateAbout(newAbout)
 	if err != nil {
 		return nil, err
 	}
 
-	return a.mapToResponse(newAbout), nil
+	return a.mapToResponse(createdAbout), nil
 }
 
 // GetAbout implements AboutService.
@@ -40,14 +50,31 @@ func (a *aboutService) GetAbout(id string) (*models.AboutResponse, error) {
 }
 
 // UpdateAbout implements AboutService.
-func (a *aboutService) UpdateAbout(about *models.About) (*models.AboutResponse, error) {
-	about, err := a.aboutRepo.UpdateAbout(about)
+func (a *aboutService) UpdateAbout(id string, about *models.AboutDTO, image *string) (*models.AboutResponse, error) {
+	dataAbout, err := a.aboutRepo.GetAbout(id)
+	if err != nil {
+		return nil, err
+	}
+
+	updatedAbout := &models.About{
+		ID:          dataAbout.ID,
+		Title:       about.Title,
+		Profession:  about.Profession,
+		Description: about.Description,
+		Location:    about.Location,
+		IsAvailable: about.IsAvailable,
+		Handphone:   about.Handphone,
+		Email:       about.Email,
+		Resume:      &about.Resume,
+	}
+
+	newUpdateAbout, err := a.aboutRepo.UpdateAbout(updatedAbout)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return a.mapToResponse(about), nil
+	return a.mapToResponse(newUpdateAbout), nil
 }
 
 func (a *aboutService) mapToResponse(about *models.About) *models.AboutResponse {
@@ -60,7 +87,7 @@ func (a *aboutService) mapToResponse(about *models.About) *models.AboutResponse 
 		IsAvailable: about.IsAvailable,
 		Handphone:   about.Handphone,
 		Email:       about.Email,
-		Resume:      about.Title,
+		Resume:      *about.Resume,
 		CreatedAt:   about.CreatedAt,
 		UpdatedAt:   about.UpdatedAt,
 	}

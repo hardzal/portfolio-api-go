@@ -11,6 +11,7 @@ type About struct {
 	Description string     `json:"description" form:"description"  gorm:"not null"`
 	Location    string     `json:"location" form:"location" gorm:"not null"`
 	IsAvailable bool       `json:"is_available" form:"is_available" gorm:"default:true"`
+	ImageUrl    string     `json:"image" form:"image" gorm:"not null"`
 	Handphone   string     `json:"handphone" form:"handphone" gorm:"not null"`
 	Email       string     `json:"email" form:"email" validate:"required,email" gorm:"not null"`
 	Resume      *string    `json:"resume" form:"resume"`
@@ -25,6 +26,7 @@ type AboutResponse struct {
 	Description string     `json:"description"`
 	Location    string     `json:"location"`
 	IsAvailable bool       `json:"is_available"`
+	ImageUrl    string     `json:"image"`
 	Handphone   string     `json:"handphone"`
 	Email       string     `json:"email"`
 	Resume      string     `json:"resume"`

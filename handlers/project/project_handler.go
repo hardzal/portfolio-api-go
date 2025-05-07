@@ -26,14 +26,17 @@ func NewProjectHandler(service services.ProjectService) ProjectHandler {
 func (p *ProjectHandlerImpl) CreateProject(c *fiber.Ctx) error {
 	var projectDTO models.ProjectDTO
 	if err := utils.ParseBodyAndValidate(c, &projectDTO); err != nil {
-		return err
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Image file required",
+			"error":   err.Error(),
+		})
 	}
 
 	file, err := c.FormFile("image")
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Image file required",
-			"error":   err,
+			"error":   err.Error(),
 		})
 	}
 

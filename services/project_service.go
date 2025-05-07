@@ -28,12 +28,12 @@ func (p *projectService) CreateProject(project *models.ProjectDTO, newImage *str
 		Demo:        project.Demo,
 	}
 
-	newProject, err := p.projectRepo.CreateProject(newProject)
+	newProjectCreate, err := p.projectRepo.CreateProject(newProject)
 	if err != nil {
 		return nil, err
 	}
 
-	return p.mapToResponse(newProject), err
+	return p.mapToResponse(newProjectCreate), err
 }
 
 // DeleteProject implements ProjectService.
