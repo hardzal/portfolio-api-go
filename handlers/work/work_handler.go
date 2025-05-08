@@ -44,6 +44,13 @@ func (w *WorkHandlerImpl) CreateWork(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
+	form, err := c.MultipartForm()
+	if err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "Invalid form data")
+	}
+
+	workDTO.Stacks = form.Value["stacks"]
+
 	newWork, err := w.workService.CreateWork(&workDTO, &url)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -123,6 +130,15 @@ func (w *WorkHandlerImpl) UpdateWork(c *fiber.Ctx) error {
 			return fiber.NewError(fiber.StatusInternalServerError, "upload failed")
 		}
 		imageURL = uploadedURL
+	}
+
+	form, err := c.MultipartForm()
+	if err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "Invalid form data")
+	}
+
+	if form.Value["stacks"] != nil {
+		workDTO.Stacks = form.Value["stacks"]
 	}
 
 	updatedWork, err := w.workService.UpdateWork(uint(id), &workDTO, &imageURL)

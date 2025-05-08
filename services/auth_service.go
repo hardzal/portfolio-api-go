@@ -40,7 +40,7 @@ func (a *authService) LoginUser(user models.UserLoginDTO) (string, error) {
 	}
 
 	t := jwt.Generate(&jwt.TokenPayload{
-		ID:       userLogin.ID,
+		ID:       userLogin.ID.String(),
 		Username: userLogin.Username,
 	})
 

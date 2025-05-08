@@ -11,10 +11,8 @@ import (
 
 type AboutHandler interface {
 	GetAbout(c *fiber.Ctx) error
-	GetAllAbout(c *fiber.Ctx) error
 	CreateAbout(c *fiber.Ctx) error
 	UpdateAbout(c *fiber.Ctx) error
-	DeleteAbout(c *fiber.Ctx) error
 }
 
 type AboutHandlerImpl struct {
@@ -105,16 +103,6 @@ func (a *AboutHandlerImpl) UpdateAbout(c *fiber.Ctx) error {
 		"message": "success updated the project",
 		"data":    updatedAbout,
 	})
-}
-
-// DeleteAbout implements AboutHandler.
-func (a *AboutHandlerImpl) DeleteAbout(c *fiber.Ctx) error {
-	panic("unimplemented")
-}
-
-// GetAllAbout implements AboutHandler.
-func (a *AboutHandlerImpl) GetAllAbout(c *fiber.Ctx) error {
-	panic("unimplemented")
 }
 
 func NewAboutHandler(aboutService services.AboutService) AboutHandler {

@@ -8,12 +8,11 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/google/uuid"
 )
 
 // payload Token untuk parameter jwt token
 type TokenPayload struct {
-	ID       uuid.UUID
+	ID       string
 	Username string
 }
 
@@ -63,11 +62,11 @@ func Verify(token string) (*TokenPayload, error) {
 	id, ok := claims["ID"]
 	username, ok := claims["username"]
 	if !ok {
-		return nil, errors.New("Something went wrong")
+		return nil, errors.New("something went wrong")
 	}
 
 	return &TokenPayload{
-		ID:       id.(uuid.UUID),
+		ID:       id.(string),
 		Username: username.(string),
 	}, nil
 }

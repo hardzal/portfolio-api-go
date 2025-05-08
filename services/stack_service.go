@@ -68,13 +68,15 @@ func (s *stackService) UpdateStack(id uint, stack *models.StackDTO, updatedImage
 		return nil, err
 	}
 
-	newStack := &models.Stack{
-		ID:    dataStack.ID,
-		Name:  stack.Name,
-		Image: updatedImage,
+	if stack.Name != "" {
+		dataStack.Name = stack.Name
 	}
 
-	updateddStack, err := s.stackRepo.UpdateStack(newStack)
+	if updatedImage != "" {
+		dataStack.Image = updatedImage
+	}
+
+	updateddStack, err := s.stackRepo.UpdateStack(dataStack)
 	if err != nil {
 		return nil, err
 	}

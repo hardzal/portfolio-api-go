@@ -1,8 +1,6 @@
 package services
 
 import (
-	"log"
-
 	"github.com/hardzal/portfolio-api-go/models"
 	"github.com/hardzal/portfolio-api-go/repositories"
 	"github.com/lib/pq"
@@ -31,8 +29,6 @@ func (p *projectService) CreateProject(project *models.ProjectDTO, newImage *str
 		Repo:        project.Repo,
 		Demo:        project.Demo,
 	}
-
-	log.Println("new result", newProject)
 
 	newProjectCreate, err := p.projectRepo.CreateProject(newProject)
 	if err != nil {

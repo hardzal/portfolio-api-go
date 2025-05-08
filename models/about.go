@@ -35,12 +35,12 @@ type AboutResponse struct {
 }
 
 type AboutDTO struct {
-	Title       string `json:"title" validate:"required"`
-	Profession  string `json:"profession" validate:"required"`
-	Description string `json:"description" validate:"required"`
-	Location    string `json:"location" validate:"required"`
-	IsAvailable bool   `json:"is_available" validate:"required"`
-	Handphone   string `json:"handphone" validate:"required"`
-	Email       string `json:"email" validate:"required"`
-	Resume      string `json:"resume" validate:"required"`
+	Title       string `json:"title" validate:"required" form:"title"`
+	Profession  string `json:"profession" validate:"required" form:"profession"`
+	Description string `json:"description" validate:"required" form:"description"`
+	Location    string `json:"location" validate:"required" form:"location"`
+	IsAvailable bool   `json:"is_available" validate:"required" form:"IsAvailable"`
+	Handphone   string `json:"handphone" validate:"required" form:"handphone"`
+	Email       string `json:"email" validate:"required" form:"email"`
+	Resume      string `json:"resume" validate:"required" form:"resume"`
 }

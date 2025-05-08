@@ -3,6 +3,7 @@ package services
 import (
 	"github.com/hardzal/portfolio-api-go/models"
 	"github.com/hardzal/portfolio-api-go/repositories"
+	"github.com/lib/pq"
 )
 
 type WorkService interface {
@@ -23,7 +24,7 @@ func (w *workService) CreateWork(work *models.WorkDTO, image *string) (*models.W
 		Role:        work.Role,
 		Company:     work.Company,
 		Description: work.Description,
-		Stacks:      work.Stacks,
+		Stacks:      pq.StringArray(work.Stacks),
 		Image:       *image,
 		StartDate:   work.StartDate,
 		EndDate:     work.EndDate,
@@ -73,18 +74,35 @@ func (w *workService) UpdateWork(id uint, work *models.WorkDTO, image *string) (
 		return nil, err
 	}
 
-	newWork := &models.Work{
-		ID:          dataWork.ID,
-		Role:        work.Role,
-		Company:     work.Company,
-		Description: work.Description,
-		Stacks:      work.Stacks,
-		Image:       *image,
-		StartDate:   work.StartDate,
-		EndDate:     work.EndDate,
+	if work.Role != "" {
+		dataWork.Role = work.Role
 	}
 
-	updateWork, err := w.workRepo.UpdateWork(newWork)
+	if work.Company != "" {
+		dataWork.Company = work.Company
+	}
+
+	if work.Description != "" {
+		dataWork.Description = work.Description
+	}
+
+	if len(work.Stacks) != 0 {
+		dataWork.Stacks = pq.StringArray(work.Stacks)
+	}
+
+	if image != nil {
+		dataWork.Image = *image
+	}
+
+	if work.StartDate != nil {
+		dataWork.StartDate = work.StartDate
+	}
+
+	if work.EndDate != nil {
+		dataWork.EndDate = work.EndDate
+	}
+
+	updateWork, err := w.workRepo.UpdateWork(dataWork)
 	if err != nil {
 		return nil, err
 	}

@@ -26,6 +26,7 @@ func (a *aboutService) CreateAbout(about *models.AboutDTO, image *string) (*mode
 		Profession:  about.Profession,
 		Description: about.Description,
 		Location:    about.Location,
+		ImageUrl:    *image,
 		IsAvailable: about.IsAvailable,
 		Handphone:   about.Handphone,
 		Email:       about.Email,
@@ -56,19 +57,27 @@ func (a *aboutService) UpdateAbout(id uint, about *models.AboutDTO, image *strin
 		return nil, err
 	}
 
-	updatedAbout := &models.About{
-		ID:          dataAbout.ID,
-		Title:       about.Title,
-		Profession:  about.Profession,
-		Description: about.Description,
-		Location:    about.Location,
-		IsAvailable: about.IsAvailable,
-		Handphone:   about.Handphone,
-		Email:       about.Email,
-		Resume:      &about.Resume,
+	if about.Title != "" {
+		dataAbout.Title = about.Title
 	}
 
-	newUpdateAbout, err := a.aboutRepo.UpdateAbout(updatedAbout)
+	if about.Profession != "" {
+		dataAbout.Profession = about.Profession
+	}
+
+	if about.Description != "" {
+		dataAbout.Description = about.Description
+	}
+
+	if about.Location != "" {
+		dataAbout.Location = about.Location
+	}
+
+	if about.Resume != "" {
+		dataAbout.Resume = &about.Resume
+	}
+
+	newUpdateAbout, err := a.aboutRepo.UpdateAbout(dataAbout)
 
 	if err != nil {
 		return nil, err

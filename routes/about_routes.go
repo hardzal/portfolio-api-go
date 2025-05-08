@@ -8,8 +8,6 @@ import (
 
 func AboutRoutes(app fiber.Router, handler about.AboutHandler) {
 	app.Get("/:id", handler.GetAbout)
-	app.Get("/", handler.GetAllAbout)
 	app.Post("/", middlewares.Auth, handler.CreateAbout)
 	app.Put("/:id", middlewares.Auth, handler.UpdateAbout)
-	app.Delete("/:id", middlewares.Auth, handler.DeleteAbout)
 }
