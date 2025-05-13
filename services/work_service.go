@@ -23,7 +23,7 @@ func (w *workService) CreateWork(work *models.WorkDTO, image *string) (*models.W
 	newWork := &models.Work{
 		Role:        work.Role,
 		Company:     work.Company,
-		Description: work.Description,
+		Description: pq.StringArray(work.Description),
 		Stacks:      pq.StringArray(work.Stacks),
 		Image:       *image,
 		StartDate:   work.StartDate,
@@ -82,7 +82,7 @@ func (w *workService) UpdateWork(id uint, work *models.WorkDTO, image *string) (
 		dataWork.Company = work.Company
 	}
 
-	if work.Description != "" {
+	if len(work.Description) != 0 {
 		dataWork.Description = work.Description
 	}
 

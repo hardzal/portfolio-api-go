@@ -4,6 +4,7 @@ import (
 	"log"
 
 	fiber "github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/hardzal/portfolio-api-go/config"
 	"github.com/hardzal/portfolio-api-go/database"
 	"github.com/hardzal/portfolio-api-go/handlers/about"
@@ -66,6 +67,7 @@ func main() {
 
 	app := fiber.New()
 
+	app.Use(cors.New())
 	app.Get("/", func(ctx *fiber.Ctx) error {
 		return ctx.JSON(fiber.Map{
 			"message": "Welcome to Golang Fiber + PostgreSQL + Gorm",
@@ -80,6 +82,6 @@ func main() {
 	routes.StackRoutes(apiRoute.Group("/stacks"), stackHandler)
 	routes.AboutRoutes(apiRoute.Group("/about"), aboutHandler)
 
-	log.Println("🚀 Server running at http://localhost:3000")
-	log.Fatal(app.Listen(":3000"))
+	log.Println("🚀 Server running at http://localhost:3005")
+	log.Fatal(app.Listen(":3005"))
 }
