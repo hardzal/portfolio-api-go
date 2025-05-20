@@ -19,21 +19,21 @@ type Project struct {
 }
 
 type ProjectResponse struct {
-	ID          uint           `json:"id"`
-	Title       string         `json:"title"`
-	Description string         `json:"description"`
-	ImageUrl    *string        `json:"image_url"`
-	Stacks      pq.StringArray `json:"stacks"`
-	Repo        *string        `json:"repo"`
-	Demo        *string        `json:"demo"`
-	CreatedAt   time.Time      `json:"created_at"`
-	UpdatedAt   *time.Time     `json:"updated_at"`
+	ID          uint       `json:"id"`
+	Title       string     `json:"title"`
+	Description string     `json:"description"`
+	ImageUrl    *string    `json:"image_url"`
+	Stacks      []string   `json:"stacks"`
+	Repo        *string    `json:"repo"`
+	Demo        *string    `json:"demo"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   *time.Time `json:"updated_at"`
 }
 
 type ProjectDTO struct {
-	Title       string         `json:"title" validate:"required" form:"title"`
-	Description string         `json:"description" validate:"required" form:"description"`
-	Stacks      pq.StringArray `json:"stacks" validate:"required" form:"stacks[]"`
-	Repo        *string        `json:"repo" validate:"required" form:"repo"`
-	Demo        *string        `json:"demo" validate:"required" form:"demo"`
+	Title       string   `json:"title" validate:"required" form:"title"`
+	Description string   `json:"description" validate:"required" form:"description"`
+	Stacks      []string `json:"stacks" validate:"required" form:"stacks[]"`
+	Repo        *string  `json:"repo" validate:"required" form:"repo"`
+	Demo        *string  `json:"demo" validate:"required" form:"demo"`
 }

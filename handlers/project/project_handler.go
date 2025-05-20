@@ -1,6 +1,7 @@
 package project
 
 import (
+	"log"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -59,13 +60,14 @@ func (p *ProjectHandlerImpl) CreateProject(c *fiber.Ctx) error {
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid form data")
 	}
-
+	log.Printf("data: %v", form)
 	projectDTO.Stacks = form.Value["stacks"]
 
 	newProject, err := p.projectService.CreateProject(&projectDTO, &url)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "failed to create project",
+			"errors":  err,
+			"message": "failed to create project",
 		})
 	}
 

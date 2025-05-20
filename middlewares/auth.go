@@ -25,6 +25,7 @@ func Auth(c *fiber.Ctx) error {
 		return fiber.ErrUnauthorized
 	}
 
+	// menyimpan user.ID ke context
 	c.Locals("USER", user.ID)
 
 	return c.Next()
