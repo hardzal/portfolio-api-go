@@ -46,7 +46,7 @@ func (w *workRepository) DeleteWork(id uint) error {
 // GetAllWorks implements WorkRepository.
 func (w *workRepository) GetAllWorks() ([]models.Work, error) {
 	var works []models.Work
-	if err := w.db.Find(&works).Error; err != nil {
+	if err := w.db.Order("id DESC").Find(&works).Error; err != nil {
 		return nil, err
 	}
 

@@ -5,6 +5,7 @@ import (
 
 	"github.com/hardzal/portfolio-api-go/models"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 var ErrProjectNotFound error = errors.New("project not found")
@@ -59,7 +60,7 @@ func (p *projectRepository) GetProject(id uint) (*models.Project, error) {
 // GetProjects implements ProjectRepository.
 func (p *projectRepository) GetAllProjects() ([]models.Project, error) {
 	var projects []models.Project
-	if err := p.db.Find(&projects).Error; err != nil {
+	if err := p.db.Order(clause.OrderByColumn{Column: clause.Column{Name: "id"}, Desc: true}).Find(&projects).Error; err != nil {
 		return nil, err
 	}
 
