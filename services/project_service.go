@@ -91,10 +91,10 @@ func (p *projectService) UpdateProject(id uint, project *models.ProjectDTO, upda
 	}
 
 	if len(project.Stacks) != 0 || project.Stacks != nil {
-		dataProject.Description = project.Description
+		dataProject.Stacks = project.Stacks
 	}
 
-	if updatedImage != nil {
+	if *updatedImage != "" {
 		dataProject.ImageUrl = updatedImage
 	}
 
