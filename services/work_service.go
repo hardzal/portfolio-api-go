@@ -90,7 +90,7 @@ func (w *workService) UpdateWork(id uint, work *models.WorkDTO, image *string) (
 		dataWork.Stacks = pq.StringArray(work.Stacks)
 	}
 
-	if image != nil {
+	if *image != "" {
 		dataWork.Image = *image
 	}
 
