@@ -77,6 +77,9 @@ func (a *aboutService) UpdateAbout(id uint, about *models.AboutDTO, image *strin
 		dataAbout.Resume = &about.Resume
 	}
 
+	if *image != "" {
+		dataAbout.ImageUrl = *image
+	}
 	newUpdateAbout, err := a.aboutRepo.UpdateAbout(dataAbout)
 
 	if err != nil {
@@ -93,6 +96,7 @@ func (a *aboutService) mapToResponse(about *models.About) *models.AboutResponse 
 		Profession:  about.Profession,
 		Description: about.Description,
 		Location:    about.Location,
+		ImageUrl:    about.ImageUrl,
 		IsAvailable: about.IsAvailable,
 		Handphone:   about.Handphone,
 		Email:       about.Email,
