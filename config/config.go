@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/caarlos0/env/v11"
-	"github.com/joho/godotenv"
 )
 
 type ConfigDB struct {
@@ -17,12 +16,12 @@ type ConfigDB struct {
 }
 
 func Load() (*ConfigDB, error) {
-	err := godotenv.Load()
+	// err := godotenv.Load()
 
-	if err != nil {
-		log.Fatal("Error loading .env file")
-		return nil, err
-	}
+	// if err != nil {
+	// 	log.Fatal("Error loading .env file")
+	// 	return nil, err
+	// }
 
 	cfg := &ConfigDB{}
 	if err := env.Parse(cfg); err != nil {
