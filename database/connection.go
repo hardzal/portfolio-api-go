@@ -10,11 +10,11 @@ import (
 
 func NewPostgresDB(cfg *config.ConfigDB) (*gorm.DB, error) {
 	dsn := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		cfg.DBHost,
-		cfg.DBPort,
+		"postgresql://%s:%s@%s:%s/%s?sslmode=require",
 		cfg.DBUser,
 		cfg.DBPassword,
+		cfg.DBHost,
+		cfg.DBPort,
 		cfg.DBName,
 	)
 
@@ -23,11 +23,12 @@ func NewPostgresDB(cfg *config.ConfigDB) (*gorm.DB, error) {
 	if err != nil {
 		// Fallback ke database default
 		fallbackDSN := fmt.Sprintf(
-			"host=%s port=%s user=%s password=%s sslmode=disable",
-			cfg.DBHost,
-			cfg.DBPort,
+			"postgresql://%s:%s@%s:%s/%s?sslmode=require",
 			cfg.DBUser,
 			cfg.DBPassword,
+			cfg.DBHost,
+			cfg.DBPort,
+			cfg.DBName,
 		)
 		db, err = gorm.Open(postgres.Open(fallbackDSN), &gorm.Config{})
 		if err != nil {
